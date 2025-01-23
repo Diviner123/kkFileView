@@ -1,0 +1,31 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 镜像
+    steps:
+    - uses: actions/checkout@v4  # 使用最新的 checkout 动作
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3  # 使用最新的 setup-java 动作
+      with:
+        java-version: '17'  # 使用最新的 Java LTS 版本
+        distribution: 'temurin'  # 推荐使用 Eclipse Temurin
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+    - name: Archive kkFileView-windows artifact
+      uses: actions/upload-artifact@v4  # 使用最新的 upload-artifact 动作
+      with:
+        name: kkFileView-windows
+        path: server/target/*.zip
+    - name: Archive kkFileView-Linux artifact
+      uses: actions/upload-artifact@v4  # 使用最新的 upload-artifact 动作
+      with:
+        name: kkFileView-Linux
+        path: server/target/*.tar.gz
